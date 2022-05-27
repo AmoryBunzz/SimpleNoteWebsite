@@ -38,15 +38,6 @@ async function register(request, response) {
             role: request.body.role,
         }
 
-        // Validate new user's data
-        const validateResponse = validators.validateUser(newUser)
-        if (validateResponse !== true) {
-            return response.status(400).json({
-                message: 'Validation failed!',
-                errors: validateResponse,
-            })
-        }
-
         // Add new user to database
         addNewUser(newUser).then((result) => {
             // Create new user info
@@ -55,13 +46,6 @@ async function register(request, response) {
                 avatar: 'public/images/avatars/user/default-avatar.png',
             }
             addNewUserInfo(newUserInfo)
-
-            // Create new wallet
-            const newWallet = {
-                user_id: result.id,
-                balance: 0,
-            }
-            addNewWallet(newWallet)
 
             // Send email to verify user
             const authKey = uuid.v1()
@@ -90,7 +74,7 @@ async function register(request, response) {
     } catch (error) {
         return response.status(500).json({
             message: 'Something went wrong!',
-            error: error,
+            error: error.message,
         })
     }
 }

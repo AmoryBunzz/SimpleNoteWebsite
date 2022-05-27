@@ -58,9 +58,10 @@ async function login(request, response) {
     } catch (error) {
         return response.status(500).json({
             message: 'Something went wrong!',
-            error: error,
+            error: error.message,
         })
     }
+    
 }
 
 module.exports = login
